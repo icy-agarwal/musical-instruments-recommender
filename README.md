@@ -30,7 +30,7 @@ Popularity, user-based CF, item-based CF, SVD and a hybrid recommender, built an
 
 ## Evaluation protocol
 
-- **Time-based split:** train before 2017, validation in 2017, test in 2018 (up to September). No random splitting, so the model never sees the future.
+- **Time-based split:** train before 2017, validation in 2017, test in 2018 (up to September). Review interactions are split chronologically, preventing future interactions from entering model training. However, applying the 5-core filter before splitting introduces some future-informed user/item selection bias.
 - **Tuning on validation only:** user-CF neighbors (k=500), SVD factors and regularization (20 factors, 0.02), and the hybrid cutoff (2 reviews).
 - **Test used once:** models were rebuilt on train + validation and scored once on the test set.
 - **Metrics:** precision@10, recall@10 and catalog coverage, all written from scratch.
@@ -50,6 +50,7 @@ Popularity, user-based CF, item-based CF, SVD and a hybrid recommender, built an
 - The data ends in September 2018.
 - A breakdown of the test set by user activity suggested user-CF helps users with 6 or more reviews. This did not repeat on validation, so it is not claimed.
 - **Temporal filtering and duplicate interactions:** The Amazon 5-core dataset is filtered using the complete review history before chronological splitting. Consequently, user and item eligibility can depend on future activity, introducing temporal selection bias. Repeated user-item interactions are also deduplicated by retaining the latest review. A diagnostic identified 165 potentially cross-period repeated pairs around the validation boundary and 22 around the test boundary. These represent small proportions of the respective evaluation sets, although their exact effect on ranking metrics has not been independently measured.
+- **Repeated user-item interactions:** The dataset contains repeated reviews for some user-item pairs. We retain the latest review during deduplication. A diagnostic identified 165 potentially cross-period repeated pairs around the validation boundary and 22 around the test boundary. These represent small proportions of the respective evaluation sets, although their exact effect on ranking metrics has not been independently measured.
 
 ## Run it
 
