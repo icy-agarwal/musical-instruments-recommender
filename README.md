@@ -49,6 +49,7 @@ Popularity, user-based CF, item-based CF, SVD and a hybrid recommender, built an
 - Reviews stand in for purchases, and many buyers never review.
 - The data ends in September 2018.
 - A breakdown of the test set by user activity suggested user-CF helps users with 6 or more reviews. This did not repeat on validation, so it is not claimed.
+- **Temporal filtering and duplicate interactions:** The Amazon 5-core dataset is filtered using the complete review history before chronological splitting. Consequently, user and item eligibility can depend on future activity, introducing temporal selection bias. Repeated user-item interactions are also deduplicated by retaining the latest review. A diagnostic identified 165 potentially cross-period repeated pairs around the validation boundary and 22 around the test boundary. These represent small proportions of the respective evaluation sets, although their exact effect on ranking metrics has not been independently measured.
 
 ## Run it
 
