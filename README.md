@@ -87,4 +87,57 @@ The following ranking metrics were implemented from scratch:
 
 ### 1. Popularity-Based Recommendation
 
-Recommends the most-reviewed products in the training dataset. Serves as a non
+Recommends the most-reviewed products in the training dataset. Serves as a non-personalized baseline against which collaborative filtering and hybrid approaches are compared.
+
+### 2. User-Based Collaborative Filtering
+
+Identifies users with similar rating patterns using cosine similarity. Recommendations are generated using ratings from the nearest neighbours, with 500 neighbours selected through validation.
+
+### 3. Item-Based Collaborative Filtering
+
+Calculates item similarities using user-rating patterns and recommends products similar to those a user has previously rated. This approach achieves the highest catalog coverage among the evaluated models.
+
+### 4. Matrix Factorization (SVD)
+
+Uses Singular Value Decomposition through the Surprise library to learn latent user and item factors. Predicted ratings are used to rank unseen products. Although SVD achieves a lower validation RMSE than the average-rating baseline, its top-10 ranking performance is comparatively weak.
+
+### 5. Hybrid Recommendation
+
+Combines popularity-based recommendations and user-based collaborative filtering:
+
+- Users with two or fewer historical reviews receive popularity-based recommendations.
+- Users with more than two historical reviews receive user-based collaborative filtering recommendations.
+
+This approach addresses limited user history while improving recall and catalog coverage over the popularity baseline.
+
+## Limitations
+
+- **Review data as a proxy:** Reviews do not represent every purchase or product interaction. A user not reviewing an item may still have purchased or used it.
+- **Temporal selection bias:** Applying the 5-core filter before chronological splitting introduces future-informed user and item selection bias.
+- **Sparse interactions:** The dataset contains very few observed interactions relative to the available catalogue, limiting recommendation quality.
+- **Cold-start users:** Users without historical interactions cannot receive personalized collaborative filtering recommendations and require a popularity-based fallback.
+- **Historical dataset:** The dataset ends in September 2018 and does not reflect current product trends or user preferences.
+- **Repeated interactions:** Retaining only the latest review for each user-item pair discards earlier rating history for that pair.
+
+## Technologies Used
+
+- Python
+- Pandas and NumPy
+- Scikit-learn
+- Scikit-Surprise
+- Matplotlib / Seaborn
+- Google Colab
+
+## How to Run
+
+1. Open `recommender.ipynb` in Google Colab.
+2. Run the initial setup cells to install the required libraries and download the dataset.
+3. Follow the notebook instructions to prepare the data and generate chronological train, validation and test splits.
+4. If prompted, grant Google Drive access for saving intermediate split files.
+5. Run the remaining cells sequentially to train the models, tune configurations and evaluate their recommendations.
+
+The notebook includes the dataset-loading instructions and the complete experimental workflow.
+
+## Project Objective
+
+The project investigates how different recommendation strategies perform on sparse e-commerce review data, emphasizing the trade-offs between recommendation accuracy, recall, catalog coverage and cold-start handling. Rather than relying on a single model, it evaluates multiple approaches against a common popularity baseline using a chronological evaluation protocol.
